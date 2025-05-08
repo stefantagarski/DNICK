@@ -13,9 +13,7 @@ class AirlineAdmin(admin.ModelAdmin):
     list_display = ('name', 'founded_year', 'is_flying_outside_Europe')
 
     def has_add_permission(self, request):
-        if request.user.is_superuser:
-            return True
-        return False
+       return True
 
 class FlightAdmin(admin.ModelAdmin):
     exclude = ('user',)
@@ -25,7 +23,7 @@ class FlightAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
     def has_change_permission(self, request, obj = None):
-        if obj and obj.user == request.user:
+        if request.user.is_superuser:
             return True
         return False
 
@@ -33,7 +31,7 @@ class FlightAdmin(admin.ModelAdmin):
         return False
 
 class PilotAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name')
+    list_display = ('first_name', 'last_name', 'rank')
 
     def has_delete_permission(self, request, obj = None):
         return False
@@ -45,5 +43,7 @@ class PilotAdmin(admin.ModelAdmin):
 
 admin.site.register(Pilot, PilotAdmin)
 admin.site.register(Balloon)
+admin.site.register(AirlineLog)
+admin.site.register(FlightReport)
 admin.site.register(Airline, AirlineAdmin)
 admin.site.register(Flight, FlightAdmin)
