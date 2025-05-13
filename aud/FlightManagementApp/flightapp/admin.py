@@ -18,6 +18,9 @@ class AirlineAdmin(admin.ModelAdmin):
 class FlightAdmin(admin.ModelAdmin):
     exclude = ('user',)
 
+    def get_queryset(self, request):
+        return Flight.objects.filter(user = request.user) # only show flights created by the logged-in user
+
     def save_model(self, request, obj, form, change):
         obj.user = request.user
         super().save_model(request, obj, form, change)
